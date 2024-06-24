@@ -1,0 +1,110 @@
+import os
+
+# Lista para almacenar los trabajadores
+trabajadores = []
+  
+# Función para registrar un nuevo trabajador
+def registrar_trabajador():
+    print("\nRegistro de Nuevo Trabajador")
+    nombre = input("Nombre y Apellido: ")
+    cargo = input("Cargo: ")
+    while True:
+        try:
+            sueldo_bruto = float(input("Sueldo Bruto: "))
+            break
+        except ValueError:
+            print("Error: Por favor, ingrese un valor numérico para el sueldo bruto.")
+    
+    # Calcular descuentos (ejemplo simple)
+    descuento_salud = sueldo_bruto * 0.07
+    descuento_afp = sueldo_bruto * 0.12
+    liquido_pagar = sueldo_bruto - descuento_salud - descuento_afp
+    
+    # Guardar trabajador en la lista
+    trabajador = {
+        'nombre': nombre,
+        'cargo': cargo,
+        'sueldo_bruto': sueldo_bruto,
+        'descuento_salud': descuento_salud,
+        'descuento_afp': descuento_afp,
+        'liquido_pagar': liquido_pagar
+    }
+    trabajadores.append(trabajador)
+    print("¡Trabajador registrado exitosamente!\n")
+
+# Función para listar todos los trabajadores
+def listar_trabajadores():
+    print("\nListado de Trabajadores:")
+    for trabajador in trabajadores:
+        print(f"Nombre: {trabajador['nombre']}, Cargo: {trabajador['cargo']}, Sueldo Bruto: {trabajador['sueldo_bruto']}, Líquido a Pagar: {trabajador['liquido_pagar']}")
+
+# Función para imprimir planilla de sueldos en archivo de texto
+def imprimir_planilla():
+    # Definir los cargos disponibles (ejemplo)
+    cargos_disponibles = ['CEO', 'Desarrollador', 'Analista de datos'] 
+    
+    print("\nCargos disponibles para imprimir planilla:")
+    for index, cargo in enumerate(cargos_disponibles):
+        print(f"{index + 1}. {cargo}")
+    
+    try:
+        opcion = int(input("\nSeleccione el número de cargo para imprimir planilla (o ingrese 0 para imprimir todos): "))
+        
+        if opcion == 0:
+            nombre_archivo = "planilla_todos.txt"
+            with open(nombre_archivo, 'w') as f:
+                f.write("Planilla de Sueldos - Todos los Trabajadores\n")
+                for trabajador in trabajadores:
+                    f.write(f"Nombre: {trabajador['nombre']}, Cargo: {trabajador['cargo']}, Sueldo Bruto: {trabajador['sueldo_bruto']}, Líquido a Pagar: {trabajador['liquido_pagar']}\n")
+            print(f"Se ha generado el archivo '{nombre_archivo}' con éxito.")
+        elif opcion >= 1 and opcion <= len(cargos_disponibles):
+            cargo_seleccionado = cargos_disponibles[opcion - 1]
+            nombre_archivo = f"planilla_{cargo_seleccionado.lower().replace(' ', '_')}.txt"
+            with open(nombre_archivo, 'w') as f:
+                f.write(f"Planilla de Sueldos - Cargo: {cargo_seleccionado}\n")
+                for trabajador in trabajadores:
+                    if trabajador['cargo'] == cargo_seleccionado:
+                        f.write(f"Nombre: {trabajador['nombre']}, Cargo: {trabajador['cargo']}, Sueldo Bruto: {trabajador['sueldo_bruto']}, Líquido a Pagar: {trabajador['liquido_pagar']}\n")
+            print(f"Se ha generado el archivo '{nombre_archivo}' con éxito.")
+        else:
+            print("Opción inválida.")
+    
+    except ValueError:
+        print("Opción inválida.")
+
+# Función para salir del programa
+def salir_programa():
+    print("Saliendo del programa...")
+    # Salir del bucle principal
+    return False
+
+# Función principal para ejecutar el programa
+def main():
+    print("Bienvenido al Sistema de Gestión de Sueldos\n")
+    while True:
+        print("\nMenú Principal:")
+        print("1. Registrar Trabajador")
+        print("2. Listar Trabajadores")
+        print("3. Imprimir Planilla de Sueldos")
+        print("4. Salir del Programa")
+        
+        try:
+            opcion = int(input("\nIngrese el número de la opción que desea realizar: "))
+            
+            if opcion == 1:
+                registrar_trabajador()
+            elif opcion == 2:
+                listar_trabajadores()
+            elif opcion == 3:
+                imprimir_planilla()
+            elif opcion == 4:
+                if not salir_programa():
+                    break
+            else:
+                print("Opción inválida. Intente nuevamente.")
+        
+        except ValueError:
+            print("Error: Ingrese un número válido.")
+
+if __name__ == "__main__":
+    main()  
